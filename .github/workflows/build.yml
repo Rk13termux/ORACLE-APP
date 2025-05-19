@@ -1,72 +1,38 @@
-name: Build and Release Flutter APK
+name: Build APK (Release - arm64-v8a Only)
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
 
 jobs:
-  build:
+  build-apk:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout código fuente
+      uses: actions/checkout@v4
 
-      - name: Set up JDK 11
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '11'
+    - name: Configurar Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.29.3'
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.16.0'
-          channel: 'stable'
+    - name: Instalar dependencias
+      run: flutter pub get
 
-      - name: Install Dependencies
-        run: flutter pub get
+    - name: Compilar APK Release (solo arm64)
+      run: flutter build apk --release --target-platform android-arm64
 
-      - name: Run Linter
-        run: flutter analyze || true
+    - name: Comprimir APK en ZIP
+      run: |
+        mkdir output
+        cp build/app/outputs/flutter-apk/app-release.apk output/rk13-arm64.apk
+        cd output
+        zip rk13-arm64.zip rk13-arm64.apk
 
-      - name: Build APK
-        run: flutter build apk --release --split-per-abi
-
-      - name: Sign APK
-        uses: r0adkll/sign-android-release@v1
-        id: sign_app
-        with:
-          releaseDirectory: build/app/outputs/flutter-apk
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: "30.0.2"
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v3
-        with:
-          name: VidaOrganizada-APK
-          path: ${{steps.sign_app.outputs.signedReleaseFile}}
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          files: ${{steps.sign_app.outputs.signedReleaseFile}}
-          name: VidaOrganizada ${{ github.ref_name }}
-          body: |
-            # VidaOrganizada ${{ github.ref_name }}
-            
-            Nueva versión de VidaOrganizada, tu asistente personal todo-en-uno.
-            
-            ## Cambios en esta versión:
-            - Mejoras en el dashboard
-            - Corrección de errores
-            - Optimizaciones de rendimiento
+    - name: Subir ZIP como artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: rk13-release-arm64
+        path: output/rk13-arm64.zip
