@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vida_organizada/config/themes.dart';
 import 'package:vida_organizada/config/routes.dart';
-import 'package:vida_organizada/shared/widgets/glass_app_bar.dart';
+import 'package:vida_organizada/shared/layouts/base_screen_layout.dart';
 import 'package:vida_organizada/shared/widgets/glass_navigation_bar.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -12,121 +12,107 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      extendBodyBehindAppBar: true,
-      appBar: const GlassAppBar(
-        title: Text('Dashboard'),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF121212),
-              Color(0xFF1A237E),
-              Color(0xFF121212),
-            ],
-          ),
+    return BaseScreenLayout(
+      title: 'Dashboard',
+      showBackButton: false, // Ocultar botón de retroceso en la pantalla principal
+      bottomNavigationBar: const GlassNavigationBar(),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.settings),
+          onPressed: () => Navigator.pushNamed(context, AppRouter.ajustes),
         ),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Encabezado de bienvenida personalizado
-                  Text(
-                    'Hola, Sebastian Lara',
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+      ],
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Encabezado de bienvenida personalizado
+            Text(
+              'Hola, Rk13termux',
+              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    _getGreeting(),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: Colors.white70,
-                        ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _getGreeting(),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.white70,
                   ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Resumen financiero
-                  _buildFinancialSummary(),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Tarjetas de acceso rápido
-                  const Text(
-                    'Accesos rápidos',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                  
-                  // Tarjeta de finanzas
-                  _buildMenuCard(
-                    'Finanzas',
-                    'Gestiona tus ingresos y gastos',
-                    Icons.account_balance_wallet_outlined,
-                    AppThemes.primaryBlue,
-                    () => Navigator.pushNamed(context, AppRouter.finanzas),
-                  ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Tarjeta de metas
-                  _buildMenuCard(
-                    'Metas',
-                    'Define y sigue tus objetivos',
-                    Icons.flag_outlined,
-                    Colors.orangeAccent, 
-                    () => Navigator.pushNamed(context, AppRouter.metas),
-                  ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Tarjeta de proyectos
-                  _buildMenuCard(
-                    'Proyectos',
-                    'Gestiona tus proyectos y tareas',
-                    Icons.task_alt_outlined,
-                    Colors.purpleAccent,
-                    () => Navigator.pushNamed(context, AppRouter.proyectos),
-                  ),
-                  
-                  const SizedBox(height: 12),
-                  
-                  // Tarjeta de navegador
-                  _buildMenuCard(
-                    'Navegador',
-                    'Accede a enlaces y contenido web',
-                    Icons.language_outlined,
-                    Colors.tealAccent,
-                    () => Navigator.pushNamed(context, AppRouter.navegador),
-                  ),
-                ],
+            ),
+            
+            const SizedBox(height: 24),
+            
+            // Resumen financiero
+            _buildFinancialSummary(),
+            
+            const SizedBox(height: 24),
+            
+            // Tarjetas de acceso rápido
+            const Text(
+              'Accesos rápidos',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-          ),
+            
+            const SizedBox(height: 16),
+            
+            // Tarjeta de finanzas
+            _buildMenuCard(
+              'Finanzas',
+              'Gestiona tus ingresos y gastos',
+              Icons.account_balance_wallet_outlined,
+              AppThemes.primaryBlue,
+              () => Navigator.pushNamed(context, AppRouter.finanzas),
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Tarjeta de metas
+            _buildMenuCard(
+              'Metas',
+              'Define y sigue tus objetivos',
+              Icons.flag_outlined,
+              Colors.orangeAccent, 
+              () => Navigator.pushNamed(context, AppRouter.metas),
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Tarjeta de proyectos
+            _buildMenuCard(
+              'Proyectos',
+              'Gestiona tus proyectos y tareas',
+              Icons.task_alt_outlined,
+              Colors.purpleAccent,
+              () => Navigator.pushNamed(context, AppRouter.proyectos),
+            ),
+            
+            const SizedBox(height: 12),
+            
+            // Tarjeta de navegador
+            _buildMenuCard(
+              'Navegador',
+              'Accede a enlaces y contenido web',
+              Icons.language_outlined,
+              Colors.tealAccent,
+              () => Navigator.pushNamed(context, AppRouter.navegador),
+            ),
+          ],
         ),
       ),
-      bottomNavigationBar: const GlassNavigationBar(),
     );
   }
+  
+  // El resto de los métodos existentes se mantienen igual
+  // _buildFinancialSummary(), _buildMenuCard(), etc.
 
   Widget _buildFinancialSummary() {
     return Column(
