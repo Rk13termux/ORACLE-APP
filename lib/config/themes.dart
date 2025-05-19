@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // Clase para manejar los temas de la aplicación
 class AppThemes {
@@ -30,13 +29,11 @@ class AppThemes {
       background: primaryBlack,
       surface: Colors.black,
     ),
-    scaffoldBackgroundColor: primaryBlack,
-    textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
     appBarTheme: AppBarTheme(
       centerTitle: true,
       elevation: 0,
       backgroundColor: glassBlack,
-      titleTextStyle: GoogleFonts.poppins(
+      titleTextStyle: const TextStyle(
         color: Colors.white,
         fontSize: 20,
         fontWeight: FontWeight.w600,
@@ -50,6 +47,7 @@ class AppThemes {
         borderRadius: BorderRadius.circular(16),
       ),
     ),
+    textTheme: ThemeData.dark().textTheme,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: glassBlue,
@@ -59,7 +57,7 @@ class AppThemes {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        textStyle: GoogleFonts.poppins(
+        textStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
@@ -68,7 +66,7 @@ class AppThemes {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: primaryBlue,
-        textStyle: GoogleFonts.poppins(
+        textStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         ),
@@ -82,7 +80,7 @@ class AppThemes {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
-        textStyle: GoogleFonts.poppins(
+        textStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
@@ -108,11 +106,11 @@ class AppThemes {
         borderSide: const BorderSide(color: errorColor, width: 2),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      labelStyle: GoogleFonts.poppins(
+      labelStyle: const TextStyle(
         color: Colors.white70,
         fontSize: 16,
       ),
-      hintStyle: GoogleFonts.poppins(
+      hintStyle: const TextStyle(
         color: Colors.white38,
         fontSize: 16,
       ),
@@ -123,24 +121,24 @@ class AppThemes {
       unselectedItemColor: Colors.white54,
       type: BottomNavigationBarType.fixed,
       elevation: 0,
-      selectedLabelStyle: GoogleFonts.poppins(
+      selectedLabelStyle: const TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w600,
       ),
-      unselectedLabelStyle: GoogleFonts.poppins(
+      unselectedLabelStyle: const TextStyle(
         fontSize: 12,
         fontWeight: FontWeight.w400,
       ),
     ),
-    tabBarTheme: TabBarTheme(
+    tabBarTheme: const TabBarTheme(
       labelColor: Colors.white,
       unselectedLabelColor: Colors.white54,
       indicatorColor: primaryBlue,
-      labelStyle: GoogleFonts.poppins(
+      labelStyle: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w600,
       ),
-      unselectedLabelStyle: GoogleFonts.poppins(
+      unselectedLabelStyle: TextStyle(
         fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
@@ -150,12 +148,12 @@ class AppThemes {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
       ),
-      titleTextStyle: GoogleFonts.poppins(
+      titleTextStyle: const TextStyle(
         color: Colors.white,
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),
-      contentTextStyle: GoogleFonts.poppins(
+      contentTextStyle: const TextStyle(
         color: Colors.white70,
         fontSize: 16,
         fontWeight: FontWeight.w400,
@@ -163,7 +161,7 @@ class AppThemes {
     ),
     snackBarTheme: SnackBarThemeData(
       backgroundColor: glassBlack,
-      contentTextStyle: GoogleFonts.poppins(
+      contentTextStyle: const TextStyle(
         color: Colors.white,
         fontSize: 14,
         fontWeight: FontWeight.w400,
@@ -216,11 +214,11 @@ class AppThemes {
       disabledColor: Colors.grey.shade800,
       selectedColor: glassBlue,
       secondarySelectedColor: glassBlue,
-      labelStyle: GoogleFonts.poppins(
+      labelStyle: const TextStyle(
         color: Colors.white,
         fontSize: 14,
       ),
-      secondaryLabelStyle: GoogleFonts.poppins(
+      secondaryLabelStyle: const TextStyle(
         color: Colors.white,
         fontSize: 14,
       ),
