@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:vida_organizada/config/routes.dart';
 import 'package:vida_organizada/config/themes.dart';
-import 'package:vida_organizada/features/dashboard/dashboard_screen.dart';
 import 'package:vida_organizada/features/finanzas/providers/finance_provider.dart';
 
 void main() async {
@@ -66,7 +65,7 @@ class OracleApp extends StatelessWidget {
       theme: AppThemes.darkTheme,
       initialRoute: AppRouter.dashboard,
       onGenerateRoute: AppRouter.generateRoute,
-      home: const DashboardScreen(),
+      // Se ha eliminado la línea 'home:' que era redundante con 'initialRoute'
     );
   }
 }

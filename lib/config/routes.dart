@@ -2,70 +2,75 @@ import 'package:flutter/material.dart';
 import 'package:vida_organizada/features/dashboard/dashboard_screen.dart';
 import 'package:vida_organizada/features/finanzas/finanzas_screen.dart';
 import 'package:vida_organizada/features/metas/metas_screen.dart';
-import 'package:vida_organizada/features/navegador/navegador_screen.dart';
 import 'package:vida_organizada/features/proyectos/proyectos_screen.dart';
 import 'package:vida_organizada/features/ajustes/ajustes_screen.dart';
+import 'package:vida_organizada/features/navegador/navegador_screen.dart';
 
-// Clase para manejar las rutas de la aplicación
 class AppRouter {
-  // Rutas nombradas principales
-  static const String home = '/';
-  static const String dashboard = '/dashboard';
+  // Rutas de navegación
+  static const String dashboard = '/';
   static const String finanzas = '/finanzas';
   static const String metas = '/metas';
   static const String proyectos = '/proyectos';
   static const String navegador = '/navegador';
   static const String ajustes = '/ajustes';
-
-  // Método para generar rutas
-  static Route<dynamic> onGenerateRoute(RouteSettings settings) {
+  
+  // Generador de rutas
+  static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case home:
       case dashboard:
-        return _buildRoute(const DashboardScreen(), settings);
+        return MaterialPageRoute(builder: (_) => const DashboardScreen());
       case finanzas:
-        return _buildRoute(const FinanzasScreen(), settings);
+        return MaterialPageRoute(builder: (_) => const FinanzasScreen());
       case metas:
-        return _buildRoute(const MetasScreen(), settings);
+        return _buildPlaceholderRoute('Metas', settings);
       case proyectos:
-        return _buildRoute(const ProyectosScreen(), settings);
+        return _buildPlaceholderRoute('Proyectos', settings);
       case navegador:
-        final String? url = settings.arguments as String?;
-        return _buildRoute(NavegadorScreen(initialUrl: url), settings);
+        return _buildPlaceholderRoute('Navegador', settings);
       case ajustes:
-        return _buildRoute(const AjustesScreen(), settings);
+        return _buildPlaceholderRoute('Ajustes', settings);
       default:
-        return _buildRoute(
-          const Scaffold(
+        return MaterialPageRoute(
+          builder: (_) => Scaffold(
             body: Center(
-              child: Text('Ruta no encontrada'),
+              child: Text('No se encontró la ruta: ${settings.name}'),
             ),
           ),
-          settings,
         );
     }
   }
-
-  // Método para construir rutas con transiciones personalizadas
-  static PageRouteBuilder _buildRoute(Widget page, RouteSettings settings) {
-    return PageRouteBuilder(
+  
+  // Constructor de rutas temporales para módulos no implementados
+  static Route<dynamic> _buildPlaceholderRoute(String title, RouteSettings settings) {
+    return MaterialPageRoute(
       settings: settings,
-      pageBuilder: (context, animation, secondaryAnimation) => page,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        const begin = Offset(1.0, 0.0);
-        const end = Offset.zero;
-        const curve = Curves.easeInOutCubic;
-        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        var offsetAnimation = animation.drive(tween);
-        return SlideTransition(
-          position: offsetAnimation,
-          child: FadeTransition(
-            opacity: animation,
-            child: child,
+      builder: (_) => Scaffold(
+        appBar: AppBar(title: Text(title)),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.construction,
+                size: 80,
+                color: Colors.amber,
+              ),
+              SizedBox(height: 24),
+              Text(
+                'Módulo en desarrollo',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Esta funcionalidad estará disponible próximamente',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16),
+              ),
+            ],
           ),
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 300),
+        ),
+      ),
     );
   }
 }
