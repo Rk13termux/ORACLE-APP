@@ -58,17 +58,29 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.5
 
+# Configuración para el icono de la aplicación
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#121212"
+  adaptive_icon_foreground: "assets/icon.png"
+
 flutter:
   uses-material-design: true
+  
   assets:
-  #  - assets/images/
-  #  - assets/lottie/
+    - assets/icon.png
+    # Descomenta estas líneas cuando tengas estos directorios listos
+    # - assets/images/
+    # - assets/lottie/
 
-  #fonts:
-  # - family: Poppins
-  #    fonts:
-  #     - asset: assets/fonts/Poppins-Regular.ttf
-  #      - asset: assets/fonts/Poppins-Medium.ttf
-  #        weight: 500
-  #      - asset: assets/fonts/Poppins-Bold.ttf
-  #        weight: 700
+  # Descomenta estas líneas cuando tengas las fuentes listas
+  # fonts:
+  #   - family: Poppins
+  #     fonts:
+  #       - asset: assets/fonts/Poppins-Regular.ttf
+  #       - asset: assets/fonts/Poppins-Medium.ttf
+  #         weight: 500
+  #       - asset: assets/fonts/Poppins-Bold.ttf
+  #         weight: 700
