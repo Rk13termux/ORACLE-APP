@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vida_organizada/config/themes.dart';
+import 'package:vida_organizada/config/routes.dart';
 import 'package:vida_organizada/shared/widgets/glass_app_bar.dart';
 import 'package:vida_organizada/shared/widgets/glass_navigation_bar.dart';
 
@@ -41,9 +42,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Encabezado de bienvenida
+                  // Encabezado de bienvenida personalizado
                   Text(
-                    'Hola, Usuario',
+                    'Hola, Sebastian Lara',
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -56,6 +57,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           color: Colors.white70,
                         ),
                   ),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Resumen financiero
+                  _buildFinancialSummary(),
                   
                   const SizedBox(height: 24),
                   
@@ -77,7 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     'Gestiona tus ingresos y gastos',
                     Icons.account_balance_wallet_outlined,
                     AppThemes.primaryBlue,
-                    () => Navigator.pushNamed(context, '/finanzas'),
+                    () => Navigator.pushNamed(context, AppRouter.finanzas),
                   ),
                   
                   const SizedBox(height: 12),
@@ -88,7 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     'Define y sigue tus objetivos',
                     Icons.flag_outlined,
                     Colors.orangeAccent, 
-                    () => Navigator.pushNamed(context, '/metas'),
+                    () => Navigator.pushNamed(context, AppRouter.metas),
                   ),
                   
                   const SizedBox(height: 12),
@@ -99,7 +105,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     'Gestiona tus proyectos y tareas',
                     Icons.task_alt_outlined,
                     Colors.purpleAccent,
-                    () => Navigator.pushNamed(context, '/proyectos'),
+                    () => Navigator.pushNamed(context, AppRouter.proyectos),
                   ),
                   
                   const SizedBox(height: 12),
@@ -110,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     'Accede a enlaces y contenido web',
                     Icons.language_outlined,
                     Colors.tealAccent,
-                    () => Navigator.pushNamed(context, '/navegador'),
+                    () => Navigator.pushNamed(context, AppRouter.navegador),
                   ),
                 ],
               ),
@@ -119,6 +125,98 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ),
       ),
       bottomNavigationBar: const GlassNavigationBar(),
+    );
+  }
+
+  Widget _buildFinancialSummary() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Resumen financiero',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          decoration: AppThemes.glassEffect(
+            color: Colors.black,
+            opacity: 0.5,
+            borderRadius: 20,
+            borderColor: AppThemes.primaryBlue.withOpacity(0.3),
+          ),
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  _buildFinancialItem('Ingresos', '\$2,450.00', Colors.green),
+                  _buildFinancialItem('Gastos', '\$1,280.50', Colors.redAccent),
+                  _buildFinancialItem('Balance', '\$1,169.50', AppThemes.primaryBlue),
+                ],
+              ),
+              const SizedBox(height: 16),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: const LinearProgressIndicator(
+                  value: 0.52,
+                  backgroundColor: Colors.white12,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppThemes.primaryBlue),
+                  minHeight: 8,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '52% del presupuesto utilizado',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white70,
+                    ),
+                  ),
+                  Text(
+                    '12 días restantes',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFinancialItem(String label, String value, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.white70,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
+        ),
+      ],
     );
   }
   
@@ -167,7 +265,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.white70,
                       ),

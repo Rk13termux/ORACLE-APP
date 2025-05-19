@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:vida_organizada/app.dart';
-import 'package:vida_organizada/core/database/database_service.dart';
-import 'package:vida_organizada/core/services/service_locator.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:vida_organizada/config/routes.dart';
+import 'package:vida_organizada/config/themes.dart';
+import 'package:vida_organizada/features/dashboard/dashboard_screen.dart';
+import 'package:vida_organizada/features/finanzas/providers/finance_provider.dart';
 
 void main() async {
   // Asegurar que los widgets de Flutter estén inicializados
@@ -21,14 +22,9 @@ void main() async {
   final appDocumentDirectory = await getApplicationDocumentsDirectory();
   await Hive.initFlutter(appDocumentDirectory.path);
   
-  // Registrar adaptadores de Hive
-  // Aquí se registrarán los modelos de datos personalizados
-  
-  // Inicializar el localizador de servicios
-  await setupServiceLocator();
-  
-  // Inicializar la base de datos
-  await ServiceLocator.get<DatabaseService>().initialize();
+  // Registrar adaptadores de Hive según sea necesario
+  // Agrega los registerAdapter cuando implementes tus modelos
+  // Por ejemplo: Hive.registerAdapter(TransactionAdapter());
   
   // Establecer el estilo de la barra de estado
   SystemChrome.setSystemUIOverlayStyle(
@@ -50,15 +46,27 @@ class AppProviders extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // Aquí irán los diferentes providers de la aplicación
-        // Como ejemplos:
-        // ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        // ChangeNotifierProvider(create: (_) => UserProvider()),
-        // ChangeNotifierProvider(create: (_) => FinanzasProvider()),
-        // ChangeNotifierProvider(create: (_) => MetasProvider()),
-        // ChangeNotifierProvider(create: (_) => ProyectosProvider()),
+        // Providers de la aplicación
+        ChangeNotifierProvider(create: (_) => FinanceProvider()),
+        // Añade más providers según sea necesario
       ],
-      child: const VidaOrganizadaApp(),
+      child: const OracleApp(),
+    );
+  }
+}
+
+class OracleApp extends StatelessWidget {
+  const OracleApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ORACLE APP',
+      debugShowCheckedModeBanner: false,
+      theme: AppThemes.darkTheme,
+      initialRoute: AppRouter.dashboard,
+      onGenerateRoute: AppRouter.generateRoute,
+      home: const DashboardScreen(),
     );
   }
 }
