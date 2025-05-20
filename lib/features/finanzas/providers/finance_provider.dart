@@ -1,146 +1,88 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:vida_organizada/features/finanzas/models/transaction_model.dart';
 
-class FinanceProvider extends ChangeNotifier {
+class FinanceProvider with ChangeNotifier {
   List<Transaction> _transactions = [];
-
-  // Datos de ejemplo para mostrar
-  FinanceProvider() {
-    _loadInitialData();
-  }
-
-  void _loadInitialData() {
-    _transactions = [
-      Transaction(
-        id: '1',
-        title: 'Salario',
-        amount: 2000.00,
-        date: DateTime.now().subtract(const Duration(days: 2)),
-        type: TransactionType.income,
-        category: TransactionCategory.salary,
-      ),
-      Transaction(
-        id: '2',
-        title: 'Dividendos',
-        amount: 450.00,
-        date: DateTime.now().subtract(const Duration(days: 3)),
-        type: TransactionType.income,
-        category: TransactionCategory.investment,
-      ),
-      Transaction(
-        id: '3',
-        title: 'Supermercado',
-        amount: 120.50,
-        date: DateTime.now().subtract(const Duration(days: 1)),
-        type: TransactionType.expense,
-        category: TransactionCategory.food,
-        description: 'Compra semanal de alimentos',
-      ),
-      Transaction(
-        id: '4',
-        title: 'Gasolina',
-        amount: 45.00,
-        date: DateTime.now(),
-        type: TransactionType.expense,
-        category: TransactionCategory.transportation,
-      ),
-      Transaction(
-        id: '5',
-        title: 'Netflix',
-        amount: 15.00,
-        date: DateTime.now().subtract(const Duration(days: 5)),
-        type: TransactionType.expense,
-        category: TransactionCategory.entertainment,
-      ),
-      Transaction(
-        id: '6',
-        title: 'Alquiler',
-        amount: 800.00,
-        date: DateTime.now().subtract(const Duration(days: 10)),
-        type: TransactionType.expense,
-        category: TransactionCategory.housing,
-      ),
-      Transaction(
-        id: '7',
-        title: 'Electricidad',
-        amount: 70.00,
-        date: DateTime.now().subtract(const Duration(days: 8)),
-        type: TransactionType.expense,
-        category: TransactionCategory.utilities,
-      ),
-      Transaction(
-        id: '8',
-        title: 'Farmacia',
-        amount: 35.00,
-        date: DateTime.now().subtract(const Duration(days: 4)),
-        type: TransactionType.expense,
-        category: TransactionCategory.health,
-      ),
-      Transaction(
-        id: '9',
-        title: 'Curso Online',
-        amount: 199.00,
-        date: DateTime.now().subtract(const Duration(days: 15)),
-        type: TransactionType.expense,
-        category: TransactionCategory.education,
-      ),
-      Transaction(
-        id: '10',
-        title: 'Zapatillas',
-        amount: 89.99,
-        date: DateTime.now().subtract(const Duration(days: 7)),
-        type: TransactionType.expense,
-        category: TransactionCategory.shopping,
-      ),
-    ];
-  }
-
-  List<Transaction> get transactions => _transactions;
-
+  
+  // Getters para obtener todas las transacciones
+  List<Transaction> get transactions => [..._transactions];
+  
+  // Obtener solo ingresos
   List<Transaction> get incomes => _transactions
       .where((transaction) => transaction.type == TransactionType.income)
       .toList();
-
+  
+  // Obtener solo gastos
   List<Transaction> get expenses => _transactions
       .where((transaction) => transaction.type == TransactionType.expense)
       .toList();
-
-  double get totalIncome => incomes.fold(0, (sum, item) => sum + item.amount);
-
-  double get totalExpense => expenses.fold(0, (sum, item) => sum + item.amount);
-
-  double get balance => totalIncome - totalExpense;
-
-  Map<TransactionCategory, double> get expensesByCategory {
-    final result = <TransactionCategory, double>{};
-    for (final expense in expenses) {
-      if (result.containsKey(expense.category)) {
-        result[expense.category] = result[expense.category]! + expense.amount;
+  
+  // Calcular balance total
+  double get balance {
+    double total = 0;
+    for (var transaction in _transactions) {
+      if (transaction.type == TransactionType.income) {
+        total += transaction.amount;
       } else {
-        result[expense.category] = expense.amount;
+        total -= transaction.amount;
       }
     }
+    return total;
+  }
+  
+  // Calcular ingresos totales
+  double get totalIncome {
+    double total = 0;
+    for (var transaction in incomes) {
+      total += transaction.amount;
+    }
+    return total;
+  }
+  
+  // Calcular gastos totales
+  double get totalExpense {
+    double total = 0;
+    for (var transaction in expenses) {
+      total += transaction.amount;
+    }
+    return total;
+  }
+  
+  // Obtener gastos por categoría
+  Map<TransactionCategory, double> get expensesByCategory {
+    final Map<TransactionCategory, double> result = {};
+    
+    for (var transaction in expenses) {
+      if (result.containsKey(transaction.category)) {
+        result[transaction.category] = result[transaction.category]! + transaction.amount;
+      } else {
+        result[transaction.category] = transaction.amount;
+      }
+    }
+    
     return result;
   }
-
+  
+  // Añadir una transacción
   void addTransaction(Transaction transaction) {
     _transactions.add(transaction);
-    _transactions.sort((a, b) => b.date.compareTo(a.date));
+    _transactions.sort((a, b) => b.date.compareTo(a.date)); // Ordenar por fecha descendente
     notifyListeners();
   }
-
-  void deleteTransaction(String id) {
-    _transactions.removeWhere((transaction) => transaction.id == id);
-    notifyListeners();
-  }
-
-  void updateTransaction(Transaction updatedTransaction) {
-    final index = _transactions.indexWhere(
-        (transaction) => transaction.id == updatedTransaction.id);
+  
+  // Actualizar una transacción
+  void updateTransaction(Transaction updated) {
+    final index = _transactions.indexWhere((t) => t.id == updated.id);
     if (index >= 0) {
-      _transactions[index] = updatedTransaction;
-      _transactions.sort((a, b) => b.date.compareTo(a.date));
+      _transactions[index] = updated;
+      _transactions.sort((a, b) => b.date.compareTo(a.date)); // Ordenar por fecha descendente
       notifyListeners();
     }
+  }
+  
+  // Eliminar una transacción
+  void deleteTransaction(String id) {
+    _transactions.removeWhere((t) => t.id == id);
+    notifyListeners();
   }
 }
