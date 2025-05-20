@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 
-enum TransactionType {
-  income,
-  expense,
-}
-
+enum TransactionType { income, expense }
 enum TransactionCategory {
-  salary,
-  investment,
-  gift,
   food,
-  transportation,
+  transport, // Asegurándome que esta categoría exista
   entertainment,
-  housing,
+  shopping,
   utilities,
   health,
   education,
-  shopping,
-  other,
+  salary,
+  gift,
+  other
 }
 
 class Transaction {
@@ -39,89 +33,53 @@ class Transaction {
     this.description,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      id: json['id'],
-      title: json['title'],
-      amount: json['amount'].toDouble(),
-      date: DateTime.parse(json['date']),
-      type: TransactionType.values.byName(json['type']),
-      category: TransactionCategory.values.byName(json['category']),
-      description: json['description'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'amount': amount,
-      'date': date.toIso8601String(),
-      'type': type.name,
-      'category': category.name,
-      'description': description,
-    };
-  }
-
   IconData get categoryIcon {
     switch (category) {
-      case TransactionCategory.salary:
-        return Icons.work;
-      case TransactionCategory.investment:
-        return Icons.trending_up;
-      case TransactionCategory.gift:
-        return Icons.card_giftcard;
       case TransactionCategory.food:
         return Icons.restaurant;
-      case TransactionCategory.transportation:
+      case TransactionCategory.transport:
         return Icons.directions_car;
       case TransactionCategory.entertainment:
         return Icons.movie;
-      case TransactionCategory.housing:
-        return Icons.home;
+      case TransactionCategory.shopping:
+        return Icons.shopping_bag;
       case TransactionCategory.utilities:
-        return Icons.power;
+        return Icons.light;
       case TransactionCategory.health:
-        return Icons.local_hospital;
+        return Icons.medical_services;
       case TransactionCategory.education:
         return Icons.school;
-      case TransactionCategory.shopping:
-        return Icons.shopping_cart;
+      case TransactionCategory.salary:
+        return Icons.work;
+      case TransactionCategory.gift:
+        return Icons.card_giftcard;
       case TransactionCategory.other:
-        return Icons.more_horiz;
-      default:
-        return Icons.attach_money;
+        return Icons.category;
     }
   }
 
   Color get categoryColor {
     switch (category) {
-      case TransactionCategory.salary:
-        return Colors.green;
-      case TransactionCategory.investment:
-        return Colors.blue;
-      case TransactionCategory.gift:
-        return Colors.purple;
       case TransactionCategory.food:
-        return Colors.orange;
-      case TransactionCategory.transportation:
-        return Colors.amber;
+        return Colors.orangeAccent;
+      case TransactionCategory.transport:
+        return Colors.blueAccent;
       case TransactionCategory.entertainment:
-        return Colors.pink;
-      case TransactionCategory.housing:
-        return Colors.brown;
-      case TransactionCategory.utilities:
-        return Colors.indigo;
-      case TransactionCategory.health:
-        return Colors.red;
-      case TransactionCategory.education:
-        return Colors.cyan;
+        return Colors.purpleAccent;
       case TransactionCategory.shopping:
-        return Colors.teal;
+        return Colors.pinkAccent;
+      case TransactionCategory.utilities:
+        return Colors.amberAccent;
+      case TransactionCategory.health:
+        return Colors.redAccent;
+      case TransactionCategory.education:
+        return Colors.tealAccent;
+      case TransactionCategory.salary:
+        return Colors.greenAccent;
+      case TransactionCategory.gift:
+        return Colors.indigoAccent;
       case TransactionCategory.other:
         return Colors.grey;
-      default:
-        return Colors.blueGrey;
     }
   }
 }

@@ -1203,7 +1203,6 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
   
   // Contenido de la pestaña de análisis de metas
   Widget _buildGoalsAnalysisTab() {
-    // Este contenido lo simplificamos para evitar errores con las gráficas circulares
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -1336,7 +1335,7 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
 
             // En lugar del gráfico radar, usamos un conjunto de barras de progreso
             _buildCategoryProgressBars(),
-
+            
             const SizedBox(height: 30),
             
             Text(
@@ -1354,5 +1353,434 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
       ),
     );
   }
-
-  Widget _
+  
+  Widget _buildCategoryProgressBars() {
+    final List<Map<String, dynamic>> categories = [
+      {'name': 'Finanzas', 'progress': 0.45, 'color': Colors.blueAccent},
+      {'name': 'Salud', 'progress': 0.7, 'color': Colors.greenAccent},
+      {'name': 'Carrera', 'progress': 0.6, 'color': Colors.orangeAccent},
+      {'name': 'Personal', 'progress': 0.5, 'color': Colors.purpleAccent},
+      {'name': 'Familia', 'progress': 0.3, 'color': Colors.pinkAccent},
+    ];
+    
+    return Column(
+      children: categories.map((category) {
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    category['name'],
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Text(
+                    '${(category['progress'] * 100).toInt()}%',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: category['color'],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: category['progress'],
+                  backgroundColor: Colors.white12,
+                  valueColor: AlwaysStoppedAnimation<Color>(category['color']),
+                  minHeight: 10,
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+  
+  Widget _buildGoalsList() {
+    final List<Map<String, dynamic>> goalsData = [
+      {
+        'title': 'Ahorrar para vacaciones',
+        'category': 'Finanzas',
+        'progress': 0.65,
+        'target': 2000.0,
+        'current': 1300.0,
+        'dueDate': DateTime(2025, 8, 15),
+        'iconData': Icons.beach_access,
+        'color': Colors.orangeAccent,
+      },
+      {
+        'title': 'Leer 12 libros',
+        'category': 'Personal',
+        'progress': 0.5,
+        'target': 12,
+        'current': 6,
+        'dueDate': DateTime(2025, 12, 31),
+        'iconData': Icons.book,
+        'color': Colors.purpleAccent,
+      },
+      {
+        'title': 'Ejercicio semanal',
+        'category': 'Salud',
+        'progress': 0.7,
+        'target': 5,
+        'current': 3.5,
+        'dueDate': DateTime(2025, 5, 26),
+        'iconData': Icons.fitness_center,
+        'color': Colors.greenAccent,
+      },
+    ];
+    
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: goalsData.length,
+      itemBuilder: (context, index) {
+        final goal = goalsData[index];
+        final remainingDays = goal['dueDate'].difference(DateTime.now()).inDays;
+        
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.black38,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: goal['color'].withOpacity(0.3),
+              width: 1,
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: goal['color'].withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        goal['iconData'] as IconData,
+                        color: goal['color'],
+                        size: 24,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            goal['title'],
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: goal['color'].withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: goal['color'].withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Text(
+                                  goal['category'],
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: goal['color'],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                '$remainingDays días restantes',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white.withOpacity(0.7),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '${(goal['progress'] * 100).toInt()}%',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: goal['color'],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: LinearProgressIndicator(
+                    value: goal['progress'],
+                    backgroundColor: Colors.white12,
+                    valueColor: AlwaysStoppedAnimation<Color>(goal['color']),
+                    minHeight: 8,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      goal['category'] == 'Finanzas'
+                          ? '${formatCurrency.format(goal['current'])} de ${formatCurrency.format(goal['target'])}'
+                          : '${goal['current']} de ${goal['target']}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        // Acción para actualizar progreso
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: goal['color'].withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.update,
+                              color: goal['color'],
+                              size: 16,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Actualizar',
+                              style: TextStyle(
+                                color: goal['color'],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  
+  // Pestaña de análisis de proyectos
+  Widget _buildProjectsAnalysisTab() {
+    // Datos de ejemplo para proyectos
+    final List<Map<String, dynamic>> projectsData = [
+      {
+        'title': 'Rediseño de App',
+        'progress': 0.7,
+        'tasks': 12,
+        'completed': 8,
+        'color': Colors.blueAccent,
+        'dueDate': DateTime(2025, 6, 10),
+        'team': ['Alex', 'María', 'Juan'],
+      },
+      {
+        'title': 'Planificación Financiera 2025',
+        'progress': 0.4,
+        'tasks': 8,
+        'completed': 3,
+        'color': Colors.greenAccent,
+        'dueDate': DateTime(2025, 5, 30),
+        'team': ['Sofía', 'Pedro'],
+      },
+      {
+        'title': 'Curso de Flutter Avanzado',
+        'progress': 0.6,
+        'tasks': 10,
+        'completed': 6,
+        'color': Colors.purpleAccent,
+        'dueDate': DateTime(2025, 7, 15),
+        'team': ['Rk13termux'],
+      },
+    ];
+    
+    return SingleScrollView(
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Resumen de proyectos
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.blueAccent.withOpacity(0.6),
+                    Colors.deepPurple.withOpacity(0.8),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Resumen de Proyectos',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildProjectMetric(
+                        value: '3',
+                        label: 'Activos',
+                        color: Colors.blueAccent,
+                        icon: Icons.play_circle_outline,
+                      ),
+                      _buildProjectMetric(
+                        value: '58%',
+                        label: 'Completado',
+                        color: Colors.greenAccent,
+                        icon: Icons.check_circle_outline,
+                      ),
+                      _buildProjectMetric(
+                        value: '32',
+                        label: 'Tareas',
+                        color: Colors.amberAccent,
+                        icon: Icons.task_alt,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 30),
+            
+            // Proyectos activos
+            Text(
+              'Proyectos Activos',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Lista de proyectos
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: projectsData.length,
+              itemBuilder: (context, index) {
+                final project = projectsData[index];
+                return _buildProjectCard(project);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildProjectCard(Map<String, dynamic> project) {
+    final remainingDays = project['dueDate'].difference(DateTime.now()).inDays;
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.black38,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: project['color'].withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                project['title'],
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                '${(project['progress'] * 100).toInt()}%',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: project['color'],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: project['progress'],
+              backgroundColor: Colors.white12,
+              valueColor: AlwaysStoppedAnimation<Color>(project['color']),
+              minHeight: 8,
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          Row(
+            children: [
+              _buildProjectInfoItem(
+                icon: Icons.task_alt,
+                label: 'Tareas',
+                value: '${project['completed']}/${project['tasks']}',
+              ),
+              _buildProjectInfoItem(
+                icon: Icons.
