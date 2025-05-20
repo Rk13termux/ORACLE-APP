@@ -1784,3 +1784,456 @@ class _DashboardScreenState extends State<DashboardScreen> with SingleTickerProv
               ),
               _buildProjectInfoItem(
                 icon: Icons.
+                  // Método _buildProjectMetric que faltaba
+  Widget _buildProjectMetric({
+    required String value, 
+    required String label, 
+    required Color color,
+    required IconData icon,
+  }) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.2),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            color: color,
+            size: 24,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.white.withOpacity(0.7),
+          ),
+        ),
+      ],
+    );
+  }
+  
+  // Método _buildProjectInfoItem que faltaba
+  Widget _buildProjectInfoItem({
+    required IconData icon,
+    required String label,
+    required String value,
+  }) {
+    return Expanded(
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            color: Colors.white70,
+            size: 16,
+          ),
+          const SizedBox(width: 4),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.white70,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  // Método _buildActivityTimelineTab que faltaba
+  Widget _buildActivityTimelineTab() {
+    // Datos de ejemplo para la línea de tiempo
+    final List<Map<String, dynamic>> activityData = [
+      {
+        'title': 'Reporte financiero generado',
+        'type': 'Finanzas',
+        'icon': Icons.assessment,
+        'color': Colors.blueAccent,
+        'time': DateTime.now().subtract(const Duration(minutes: 30)),
+      },
+      {
+        'title': 'Meta "Ahorrar para vacaciones" actualizada',
+        'type': 'Metas',
+        'icon': Icons.flag,
+        'color': Colors.orangeAccent,
+        'time': DateTime.now().subtract(const Duration(hours: 2)),
+      },
+      {
+        'title': 'Nueva tarea añadida a "Rediseño de App"',
+        'type': 'Proyectos',
+        'icon': Icons.task_alt,
+        'color': Colors.purpleAccent,
+        'time': DateTime.now().subtract(const Duration(hours: 5)),
+      },
+      {
+        'title': 'Gastos por categoría analizados',
+        'type': 'Finanzas',
+        'icon': Icons.pie_chart,
+        'color': Colors.blueAccent,
+        'time': DateTime.now().subtract(const Duration(hours: 8)),
+      },
+      {
+        'title': 'Meta "Ejercicio semanal" completada',
+        'type': 'Metas',
+        'icon': Icons.fitness_center,
+        'color': Colors.orangeAccent,
+        'time': DateTime.now().subtract(const Duration(hours: 12)),
+      },
+    ];
+    
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 24),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.black38,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  color: AppThemes.primaryBlue,
+                  size: 20,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Tu línea de tiempo muestra toda tu actividad reciente en orden cronológico',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          
+          Expanded(
+            child: activityData.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.history,
+                          size: 64,
+                          color: Colors.white.withOpacity(0.3),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No hay actividad reciente',
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white.withOpacity(0.7),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: activityData.length,
+                    itemBuilder: (context, index) {
+                      final activity = activityData[index];
+                      
+                      return ActivityTimelineItem(
+                        title: activity['title'],
+                        type: activity['type'],
+                        icon: activity['icon'],
+                        color: activity['color'],
+                        time: activity['time'],
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Corrección del método _buildProjectsAnalysisTab
+  Widget _buildProjectsAnalysisTab() {
+    // Datos de ejemplo para proyectos
+    final List<Map<String, dynamic>> projectsData = [
+      {
+        'title': 'Rediseño de App',
+        'progress': 0.7,
+        'tasks': 12,
+        'completed': 8,
+        'color': Colors.blueAccent,
+        'dueDate': DateTime(2025, 6, 10),
+        'team': ['Alex', 'María', 'Juan'],
+      },
+      {
+        'title': 'Planificación Financiera 2025',
+        'progress': 0.4,
+        'tasks': 8,
+        'completed': 3,
+        'color': Colors.greenAccent,
+        'dueDate': DateTime(2025, 5, 30),
+        'team': ['Sofía', 'Pedro'],
+      },
+      {
+        'title': 'Curso de Flutter Avanzado',
+        'progress': 0.6,
+        'tasks': 10,
+        'completed': 6,
+        'color': Colors.purpleAccent,
+        'dueDate': DateTime(2025, 7, 15),
+        'team': ['Rk13termux'],
+      },
+    ];
+    
+    return SingleChildScrollView( // Corregido a SingleChildScrollView en lugar de SingleScrollView
+      physics: const BouncingScrollPhysics(),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Resumen de proyectos
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    Colors.blueAccent.withOpacity(0.6),
+                    Colors.deepPurple.withOpacity(0.8),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Resumen de Proyectos',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildProjectMetric(
+                        value: '3',
+                        label: 'Activos',
+                        color: Colors.blueAccent,
+                        icon: Icons.play_circle_outline,
+                      ),
+                      _buildProjectMetric(
+                        value: '58%',
+                        label: 'Completado',
+                        color: Colors.greenAccent,
+                        icon: Icons.check_circle_outline,
+                      ),
+                      _buildProjectMetric(
+                        value: '32',
+                        label: 'Tareas',
+                        color: Colors.amberAccent,
+                        icon: Icons.task_alt,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            
+            const SizedBox(height: 30),
+            
+            // Proyectos activos
+            Text(
+              'Proyectos Activos',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Lista de proyectos
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: projectsData.length,
+              itemBuilder: (context, index) {
+                final project = projectsData[index];
+                return _buildProjectCard(project);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Corrección de la implementación de _buildProjectCard
+  Widget _buildProjectCard(Map<String, dynamic> project) {
+    final remainingDays = project['dueDate'].difference(DateTime.now()).inDays;
+    final formatter = DateFormat('dd/MM/yyyy');
+    
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.black38,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: project['color'].withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                project['title'],
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              Text(
+                '${(project['progress'] * 100).toInt()}%',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: project['color'],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: project['progress'],
+              backgroundColor: Colors.white12,
+              valueColor: AlwaysStoppedAnimation<Color>(project['color']),
+              minHeight: 8,
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          Row(
+            children: [
+              _buildProjectInfoItem(
+                icon: Icons.task_alt,
+                label: 'Tareas',
+                value: '${project['completed']}/${project['tasks']}',
+              ),
+              _buildProjectInfoItem(
+                icon: Icons.calendar_today,
+                label: 'Fecha límite',
+                value: formatter.format(project['dueDate']),
+              ),
+              _buildProjectInfoItem(
+                icon: Icons.timelapse,
+                label: 'Restante',
+                value: '$remainingDays días',
+              ),
+            ],
+          ),
+          
+          const SizedBox(height: 16),
+          
+          Row(
+            children: [
+              const Icon(
+                Icons.people,
+                size: 16,
+                color: Colors.white70,
+              ),
+              const SizedBox(width: 4),
+              const Text(
+                'Equipo:',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  children: (project['team'] as List).map((member) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: project['color'].withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: project['color'].withOpacity(0.3),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        member,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: project['color'],
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }

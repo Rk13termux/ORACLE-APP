@@ -1,83 +1,102 @@
 import 'package:flutter/material.dart';
-import 'package:vida_organizada/config/routes.dart';
 import 'package:vida_organizada/config/themes.dart';
+import 'package:vida_organizada/config/routes.dart';
 
-class GlassNavigationBar extends StatefulWidget {
+class GlassNavigationBar extends StatelessWidget {
   const GlassNavigationBar({Key? key}) : super(key: key);
-
-  @override
-  State<GlassNavigationBar> createState() => _GlassNavigationBarState();
-}
-
-class _GlassNavigationBarState extends State<GlassNavigationBar> {
-  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 70,
+      margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppThemes.glassBlack,
+        color: Colors.black.withOpacity(0.6),
+        borderRadius: BorderRadius.circular(25),
+        border: Border.all(
+          color: AppThemes.primaryBlue.withOpacity(0.3),
+          width: 1,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.3),
             blurRadius: 10,
-            offset: const Offset(0, -2),
+            spreadRadius: 1,
           ),
         ],
       ),
-      child: BottomNavigationBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppThemes.primaryBlue,
-        unselectedItemColor: Colors.white54,
-        showUnselectedLabels: true,
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.dashboard_outlined),
-            activeIcon: Icon(Icons.dashboard),
-            label: 'Dashboard',
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildNavItem(
+            context,
+            icon: Icons.dashboard,
+            label: 'Inicio',
+            route: AppRouter.dashboard,
+            isSelected: true,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance_wallet_outlined),
-            activeIcon: Icon(Icons.account_balance_wallet),
+          _buildNavItem(
+            context,
+            icon: Icons.account_balance_wallet,
             label: 'Finanzas',
+            route: AppRouter.finanzas,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.flag_outlined),
-            activeIcon: Icon(Icons.flag),
+          _buildNavItem(
+            context,
+            icon: Icons.flag,
             label: 'Metas',
+            route: AppRouter.metas,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.task_outlined),
-            activeIcon: Icon(Icons.task),
+          _buildNavItem(
+            context,
+            icon: Icons.work,
             label: 'Proyectos',
+            route: AppRouter.proyectos,
           ),
         ],
       ),
     );
   }
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Navigator.pushReplacementNamed(context, AppRouter.dashboard);
-        break;
-      case 1:
-        Navigator.pushReplacementNamed(context, AppRouter.finanzas);
-        break;
-      case 2:
-        Navigator.pushReplacementNamed(context, AppRouter.metas);
-        break;
-      case 3:
-        Navigator.pushReplacementNamed(context, AppRouter.proyectos);
-        break;
-    }
+  Widget _buildNavItem(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required String route,
+    bool isSelected = false,
+  }) {
+    return InkWell(
+      onTap: () {
+        if (!isSelected) {
+          Navigator.pushReplacementNamed(context, route);
+        }
+      },
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppThemes.primaryBlue.withOpacity(0.2) : Colors.transparent,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? AppThemes.primaryBlue : Colors.white54,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? AppThemes.primaryBlue : Colors.white54,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
